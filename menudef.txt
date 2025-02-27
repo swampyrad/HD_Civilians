@@ -1,0 +1,34 @@
+AddOptionMenu "OptionsMenu"
+{
+    Submenu "HD Civilians Options", "HDCivvieOptions"
+}
+
+OptionMenu HDCivvieOptions
+{
+    Title "-= HD Civilians Options =-"
+	Option "Civilians spawn in the wild:", "Civvie_EnableWorldSpawns", "OnOff"
+	Option "Civilians spawn as friendlies:", "Civvie_SpawnFriendly", "OnOff"
+	StaticText ""
+	StaticText "= Doom 1 Monsters ="
+	StaticText ""
+	Option "Civilians replace Zombiemen", "Civvie_ReplaceZombiemanSpawns", "OnOff"
+	Option "Civilians replace Shotgunners", "Civvie_ReplaceShotgunnerSpawns", "OnOff"
+	Option "Civilians replace Chaingunners", "Civvie_ReplaceChaingunnerSpawns", "OnOff"
+	Option "Civilians replace Imps", "Civvie_ReplaceImpSpawns", "OnOff"
+    Option "Civilians replace Demons", "Civvie_ReplaceDemonSpawns", "OnOff"
+    Option "Civilians replace Spectres", "Civvie_ReplaceSpectreSpawns", "OnOff"
+    Option "Civilians replace Cacodemons", "Civvie_ReplaceCacoSpawns", "OnOff"
+    Option "Civilians replace Lost Souls", "Civvie_ReplaceSkullSpawns", "OnOff"
+    Option "Civilians replace Barons of Hell", "Civvie_ReplaceBaronSpawns", "OnOff"
+    StaticText ""
+	StaticText "= Doom 2 Monsters ="
+	StaticText ""
+    Option "Civilians replace Hell Knights", "Civvie_ReplaceGoatSpawns", "OnOff"
+    Option "Civilians replace Revenants", "Civvie_ReplaceBonesSpawns", "OnOff"
+    Option "Civilians replace Arachnotrons", "Civvie_ReplaceTronSpawns", "OnOff"
+    Option "Civilians replace Pain Elementals", "Civvie_ReplaceMeatballSpawns", "OnOff"
+    Option "Civilians replace Mancubuses", "Civvie_ReplaceMancSpawns", "OnOff"
+    Option "Civilians replace Archviles", "Civvie_ReplaceArchieSpawns", "OnOff"
+    Option "Civilians replace SS Guards", "Civvie_ReplaceNaziSpawns", "OnOff"
+
+}

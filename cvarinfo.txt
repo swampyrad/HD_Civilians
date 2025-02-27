@@ -1,0 +1,26 @@
+server bool Civvie_EnableWorldSpawns = false;
+
+server bool Civvie_SpawnFriendly = true;
+server bool Civvie_ShootOnSight = false;
+
+server bool Civvie_ReplaceZombiemanSpawns = false;
+server bool Civvie_ReplaceShotgunnerSpawns = false;
+server bool Civvie_ReplaceChaingunnerSpawns = false;
+
+server bool Civvie_ReplaceImpSpawns = false;
+server bool Civvie_ReplaceDemonSpawns = false;
+server bool Civvie_ReplaceSpectreSpawns = false;
+server bool Civvie_ReplaceCacoSpawns = false;
+server bool Civvie_ReplaceSkullSpawns = false;
+server bool Civvie_ReplaceBaronSpawns = false;
+
+server bool Civvie_ReplaceCybieSpawns = false;
+server bool Civvie_ReplaceSpidermindSpawns = false;
+
+server bool Civvie_ReplaceGoatSpawns = false;
+server bool Civvie_ReplaceTronSpawns = false;
+server bool Civvie_ReplaceBonesSpawns = false;
+server bool Civvie_ReplaceMeatballSpawns = false;
+server bool Civvie_ReplaceMancSpawns = false;
+server bool Civvie_ReplaceArchieSpawns = false;
+server bool Civvie_ReplaceNaziSpawns = false;
