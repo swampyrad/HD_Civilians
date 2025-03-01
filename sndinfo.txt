@@ -1,30 +1,45 @@
 // Male Bystanders
 
-$random civvie/death{   civvie/death1  
-                        civvie/death2  
-                        civvie/death3 
-                        civvie/death4   }
+$random civvie/active{  civvie/active1
+                        civvie/active2  
+                        civvie/active3 
+                        civvie/active4
+                        civvie/active5
+                      }
 
-$random civvie/pain  {  civvie/pain1 
-                        civvie/pain2 
-                        civvie/pain3 			
-                        civvie/pain4 			
-                        civvie/pain5 			
-                        civvie/pain6 			
-                        civvie/pain7 			
-                        civvie/pain8
-                        civvie/pain9
-                        civvie/pain10
-                        civvie/pain11
-                        civvie/pain12
-                        civvie/pain13
-                        civvie/pain14
-                        }
+$random civvie/death{ civvie/death1  
+                      civvie/death2  
+                      civvie/death3 
+                      civvie/death4   
+                    }
+
+$random civvie/pain{  civvie/pain1 
+                      civvie/pain2 
+                      civvie/pain3 			
+                      civvie/pain4 			
+                      civvie/pain5 			
+                      civvie/pain6 			
+                      civvie/pain7 			
+                      civvie/pain8
+                      civvie/pain9
+                      civvie/pain10
+                      civvie/pain11
+                      civvie/pain12
+                      civvie/pain13
+                      civvie/pain14
+                    }
+
+civvie/active1		a_bleed
+civvie/active2		a_help
+civvie/active3		a_please
+civvie/active4		a_shoot
+civvie/active5    a_where
 
 civvie/death1			d_dead1
 civvie/death2			d_dead2
 civvie/death3			d_dead3
 civvie/death4			d_dead4
+
 civvie/pain1 			p_ahh1
 civvie/pain2 			p_ahh2
 civvie/pain3 			p_ahh3
@@ -33,47 +48,76 @@ civvie/pain5 			p_hurt1
 civvie/pain6 			p_hurt2
 civvie/pain7 			p_hurt3
 civvie/pain8 			p_hurt4
-civvie/pain9            1paul
-civvie/pain10 			3paul
-civvie/pain11 			5paul
-civvie/pain12 			6paul
-civvie/pain13 			8paul
-civvie/pain14           12paul
+civvie/pain9      1paul
+civvie/pain10 		3paul
+civvie/pain11 		5paul
+civvie/pain12 		6paul
+civvie/pain13 		8paul
+civvie/pain14     12paul
 
 // Female Bystanders
 
-$random femciv/death	{   femciv/death1  
-                            femciv/death2  
-                            femciv/death3 
-                            femciv/death4    
-                            femciv/death5
-                            femciv/death6    }
-$random femciv/pain     {   femciv/pain1 
-                            femciv/pain2 
-                            femciv/pain3 			
-                            femciv/pain4 			
-                            femciv/pain5 			
-                            femciv/pain6 			
-                            femciv/pain7 			
-                            femciv/pain8     
-                            femciv/pain9
-                            femciv/pain10
-                            femciv/pain11			
-                            femciv/pain12		
-                            femciv/pain13
-                            femciv/pain14
-                            femciv/pain15
-                            femciv/pain16 			
-                            femciv/pain17 			
-                            femciv/pain18
-                            femciv/pain19   }
+$random femciv/active{  femciv/active1
+                        femciv/active2
+                        femciv/active3
+                        femciv/active4
+                        femciv/active5
+                        femciv/active6
+                        femciv/active7
+                        femciv/active8
+                        femciv/active9
+                        femciv/active10
+                        femciv/active11
+                      }
+
+$random femciv/death{ femciv/death1  
+                      femciv/death2  
+                      femciv/death3 
+                      femciv/death4    
+                      femciv/death5
+                      femciv/death6
+                    }
+                    
+$random femciv/pain{  femciv/pain1 
+                      femciv/pain2 
+                      femciv/pain3 			
+                      femciv/pain4 			
+                      femciv/pain5 			
+                      femciv/pain6 			
+                      femciv/pain7 			
+                      femciv/pain8     
+                      femciv/pain9
+                      femciv/pain10
+                      femciv/pain11			
+                      femciv/pain12		
+                      femciv/pain13
+                      femciv/pain14
+                      femciv/pain15
+                      femciv/pain16 			
+                      femciv/pain17 			
+                      femciv/pain18
+                      femciv/pain19   
+                    }
+
+femciv/active1      amy4
+femciv/active2      amy8
+femciv/active3      andrea23
+femciv/active4      andrea24
+femciv/active5      kim92
+femciv/active6      lia49
+femciv/active7      lia80
+femciv/active8      lia114
+femciv/active9      steph28
+femciv/active10     steph56
+femciv/active11     tina241
 
 femciv/death1			amy14
 femciv/death2			lia13
 femciv/death3			scream3
 femciv/death4			tina1
-femciv/death5           tina23
+femciv/death5     tina23
 femciv/death6			tina231
+
 femciv/pain1 			amy12
 femciv/pain2 			amy13
 femciv/pain3 			amy15
@@ -82,14 +126,14 @@ femciv/pain5 			andrea16
 femciv/pain6 			andrea17
 femciv/pain7 			andrea19
 femciv/pain8 			celina21
-femciv/pain9            debbieahah
-femciv/pain10           debbieahh
-femciv/pain11 			debbieah
+femciv/pain9      debbieahah
+femciv/pain10     debbieahh
+femciv/pain11 		debbieah
 femciv/pain12			debbieoh
-femciv/pain13 			kim97
-femciv/pain14 			lia43
-femciv/pain15 			lia65
-femciv/pain16 			scream2
-femciv/pain17 			steph23
-femciv/pain18 			steph36
-femciv/pain19           steph70
+femciv/pain13 		kim97
+femciv/pain14 		lia43
+femciv/pain15 		lia65
+femciv/pain16 		scream2
+femciv/pain17 		steph23
+femciv/pain18 		steph36
+femciv/pain19     steph70

@@ -1,7 +1,7 @@
 server bool Civvie_EnableWorldSpawns = false;
 
 server bool Civvie_SpawnFriendly = true;
-server bool Civvie_ShootOnSight = false;
+server bool Civvie_StayQuiet = true;
 
 server bool Civvie_ReplaceZombiemanSpawns = false;
 server bool Civvie_ReplaceShotgunnerSpawns = false;

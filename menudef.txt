@@ -5,9 +5,10 @@ AddOptionMenu "OptionsMenu"
 
 OptionMenu HDCivvieOptions
 {
-    Title "-= HD Civilians Options =-"
+  Title "-= HD Civilians Options =-"
 	Option "Civilians spawn in the wild:", "Civvie_EnableWorldSpawns", "OnOff"
 	Option "Civilians spawn as friendlies:", "Civvie_SpawnFriendly", "OnOff"
+  Option "Civilians stay quiet:", "Civvie_StayQuiet", "OnOff"
 	StaticText ""
 	StaticText "= Doom 1 Monsters ="
 	StaticText ""
