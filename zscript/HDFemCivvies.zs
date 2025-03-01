@@ -10,7 +10,7 @@ class HDFemCivilian : HDHumanoid
   activesound "femciv/active";
   Tag "Civilian";
   
-    hdmobbase.landsound "";
+  hdmobbase.landsound "";
 	hdmobbase.stepsound "";
 	hdmobbase.stepsoundwet "";
 
@@ -24,19 +24,47 @@ class HDFemCivilian : HDHumanoid
   +USESPECIAL
   Activation THINGSPEC_Activate | THINGSPEC_NoDeathSpecial;
   }
-  override void Activate(Actor activator){SetStateLabel("Rescued");}
+  
+  override void postbeginplay(){
+    super.postbeginplay();
+    
+    //check whether cvilians can be
+    //rescued or not
+    if(Civvie_SpawnFriendly){
+      bfriendly=true;
+      bnotarget=false;
+    }
+  }
+
+  override void Tick(){
+    super.Tick();
+    
+    if(health>0){
+      if(bfriendly&&!bUseSpecial){
+        bUseSpecial=true;
+        bNoTarget=false;
+        bMISSILEEVENMORE=true;
+      }
+    
+      //evil civs are hostile and can't be rescued
+      if(!bfriendly&&bUseSpecial){
+        bUseSpecial=false;
+        bNoTarget=true;
+        bMISSILEEVENMORE=false;
+      }
+    } 
+  }
+  
+  override void Activate(Actor activator){
+    SetStateLabel("Rescued");
+  }
 }
 
-class PedestrianFod1f : HDFemCivilian    //white tanktop girl
+class Civvie1f : HDFemCivilian    //white tanktop girl
 {
-  
   states{
 	spawn:
 		PEF1 R 1{
-            if(Civvie_SpawnFriendly)
-		    {bfriendly=true;
-		     bnotarget=false;
-		    }
 			A_HDLook();
 			//A_Recoil(frandom(-0.1,0.1));
 		}
@@ -60,7 +88,9 @@ class PedestrianFod1f : HDFemCivilian    //white tanktop girl
 		#### CD 5 A_SetAngle(angle+random(-4,4));
 		#### A 0{
 			A_Look();
-			//if(!random(0,127))A_Vocalize(activesound);
+			if(!random(0,127)
+			   &&Civvie_StayQuiet==false
+			  )A_Vocalize(activesound);
 		}
 		#### AB 5 A_SetAngle(angle+random(-4,4));
 		#### B 1 A_SetTics(random(10,40));
@@ -75,9 +105,7 @@ class PedestrianFod1f : HDFemCivilian    //white tanktop girl
 		#### A 0 A_AlertMonsters(128);
 		loop;
 
-    melee:
-        ---- EDCBA 3 A_Recoil(2);
-    missile:
+  missile:
 		---- A 0 setstatelabel("see");
 	
 	pain:
@@ -112,7 +140,7 @@ class PedestrianFod1f : HDFemCivilian    //white tanktop girl
 		#### M 5 canraise{if(abs(vel.z)>=2.)setstatelabel("dead");}
 		wait;
 	xxxdeath:
-	    #### # 0 {bUseSpecial=false;}
+    #### # 0 {bUseSpecial=false;}
 		#### O 5;
 		#### P 5{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
@@ -138,31 +166,27 @@ class PedestrianFod1f : HDFemCivilian    //white tanktop girl
 		PEF1 L 4;
 		#### LK 6;
 		#### JIH 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	ungib:
 		PGIB E 12;
 		#### D 8;
 		#### BCA 6;
 		PEF1 PONM 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	rescued:
-	    TNT1 A 0 A_SpawnItem("TeleportFog");
-	    TNT1 A 0 A_SpawnItem("ClipMagPickup");
-	    stop;
+    TNT1 A 0 A_SpawnItem("TeleportFog");
+    TNT1 A 0 A_SpawnItem("CivvieLootSpawner");
+    stop;
 	}
-
 }
 
-class PedestrianFod2f : HDFemCivilian   //green tanktop girl
+class Civvie2f : HDFemCivilian   //green tanktop girl
 {
   states{
 	spawn:
 		PEF2 R 1{
-			if(Civvie_SpawnFriendly)
-		    {bfriendly=true;
-		    bnotarget=false;}
 			A_HDLook();
 			//A_Recoil(frandom(-0.1,0.1));
 		}
@@ -186,7 +210,9 @@ class PedestrianFod2f : HDFemCivilian   //green tanktop girl
 		#### CD 5 A_SetAngle(angle+random(-4,4));
 		#### A 0{
 			A_Look();
-			//if(!random(0,127))A_Vocalize(activesound);
+			if(!random(0,127)
+			   &&Civvie_StayQuiet==false
+			  )A_Vocalize(activesound);
 		}
 		#### AB 5 A_SetAngle(angle+random(-4,4));
 		#### B 1 A_SetTics(random(10,40));
@@ -200,9 +226,7 @@ class PedestrianFod2f : HDFemCivilian   //green tanktop girl
 		#### ABCD random(4,5) A_HDChase();
 		loop;
 
-    melee:
-        ---- EDCBA 3 A_Recoil(2);
-    missile:
+  missile:
 		---- A 0 setstatelabel("see");
 		
 	pain:
@@ -236,7 +260,7 @@ class PedestrianFod2f : HDFemCivilian   //green tanktop girl
 		#### M 5 canraise{if(abs(vel.z)>=2.)setstatelabel("dead");}
 		wait;
 	xxxdeath:
-	    #### # 0 {bUseSpecial=false;}
+    #### # 0 {bUseSpecial=false;}
 		#### O 5;
 		#### P 5{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
@@ -245,7 +269,7 @@ class PedestrianFod2f : HDFemCivilian   //green tanktop girl
 		PGIB ABCDE 5;
 		goto xdead;
 	xdeath:
-	    #### # 0 {bUseSpecial=false;}
+    #### # 0 {bUseSpecial=false;}
 		#### O 5{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
 			A_XScream();
@@ -262,33 +286,27 @@ class PedestrianFod2f : HDFemCivilian   //green tanktop girl
 		PEF2 L 4;
 		#### LK 6;
 		#### JIH 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	ungib:
 		PGIB E 12;
 		#### D 8;
 		#### BCA 6;
 		PEF2 PONM 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	rescued:
-	    TNT1 A 0 A_SpawnItem("TeleportFog");
-	    TNT1 A 0 A_SpawnItem("ClipMagPickup");
-	    stop;
+    TNT1 A 0 A_SpawnItem("TeleportFog");
+    TNT1 A 0 A_SpawnItem("CivvieLootSpawner");
+    stop;
 	}
-
 }
 
-
-class PedestrianFod3f : HDFemCivilian   //black jacket girl
+class Civvie3f : HDFemCivilian   //black jacket girl
 {
-  
   states{
 	spawn:
 		PEF3 R 1{
-			if(Civvie_SpawnFriendly)
-		    {bfriendly=true;
-		    bnotarget=false;}
 			A_HDLook();
 			//A_Recoil(frandom(-0.1,0.1));
 		}
@@ -312,7 +330,9 @@ class PedestrianFod3f : HDFemCivilian   //black jacket girl
 		#### CD 5 A_SetAngle(angle+random(-4,4));
 		#### A 0{
 			A_Look();
-			//if(!random(0,127))A_Vocalize(activesound);
+			if(!random(0,127)
+			   &&Civvie_StayQuiet==false
+			  )A_Vocalize(activesound);
 		}
 		#### AB 5 A_SetAngle(angle+random(-4,4));
 		#### B 1 A_SetTics(random(10,40));
@@ -326,9 +346,7 @@ class PedestrianFod3f : HDFemCivilian   //black jacket girl
 		#### ABCD random(4,5) A_HDChase();
 		loop;
 
-    melee:
-        ---- EDCBA 3 A_Recoil(2);
-    missile:
+  missile:
 		---- A 0 setstatelabel("see");
 		
 	pain:
@@ -352,7 +370,7 @@ class PedestrianFod3f : HDFemCivilian   //black jacket girl
 		#### ABCD 2 A_HDChase();
 		---- A 0 setstatelabel("see");
 	death:
-	    #### # 0 {bUseSpecial=false;}
+    #### # 0 {bUseSpecial=false;}
 		#### H 5;
 		#### I 5 A_Vocalize(deathsound);
 		#### J 5 A_NoBlocking();
@@ -362,7 +380,7 @@ class PedestrianFod3f : HDFemCivilian   //black jacket girl
 		#### M 5 canraise{if(abs(vel.z)>=2.)setstatelabel("dead");}
 		wait;
 	xxxdeath:
-	    #### # 0 {bUseSpecial=false;}
+	  #### # 0 {bUseSpecial=false;}
 		#### O 5;
 		#### P 5{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
@@ -371,7 +389,7 @@ class PedestrianFod3f : HDFemCivilian   //black jacket girl
 		PGIB ABCDE 5;
 		goto xdead;
 	xdeath:
-	    #### # 0 {bUseSpecial=false;}
+    #### # 0 {bUseSpecial=false;}
 		#### O 5{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
 			A_XScream();
@@ -388,32 +406,27 @@ class PedestrianFod3f : HDFemCivilian   //black jacket girl
 		PEF3 L 4;
 		#### LK 6;
 		#### JIH 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	ungib:
 		PGIB E 12;
 		#### D 8;
 		#### BCA 6;
 		PEF3 PONM 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	rescued:
-	    TNT1 A 0 A_SpawnItem("TeleportFog");
-	    TNT1 A 0 A_SpawnItem("ShellRandom");
-	    stop;
+    TNT1 A 0 A_SpawnItem("TeleportFog");
+    TNT1 A 0 A_SpawnItem("CivvieLootSpawner");
+    stop;
 	}
-
 }
 
-class PedestrianFod4f : HDFemCivilian   //office lady
+class Civvie4f : HDFemCivilian   //office lady
 {
-  
   states{
 	spawn:
 		PEF4 R 1{
-			if(Civvie_SpawnFriendly)
-		    {bfriendly=true;
-		    bnotarget=false;}
 			A_HDLook();
 			//A_Recoil(frandom(-0.1,0.1));
 		}
@@ -437,7 +450,9 @@ class PedestrianFod4f : HDFemCivilian   //office lady
 		#### CD 5 A_SetAngle(angle+random(-4,4));
 		#### A 0{
 			A_Look();
-			//if(!random(0,127))A_Vocalize(activesound);
+			if(!random(0,127)
+			   &&Civvie_StayQuiet==false
+			  )A_Vocalize(activesound);
 		}
 		#### AB 5 A_SetAngle(angle+random(-4,4));
 		#### B 1 A_SetTics(random(10,40));
@@ -451,9 +466,7 @@ class PedestrianFod4f : HDFemCivilian   //office lady
 		#### ABCD random(4,5) A_HDChase();
 		loop;
 
-    melee:
-        ---- EDCBA 3 A_Recoil(2);
-    missile:
+  missile:
 		---- A 0 setstatelabel("see");
 	
 	pain:
@@ -487,7 +500,7 @@ class PedestrianFod4f : HDFemCivilian   //office lady
 		#### M 5 canraise{if(abs(vel.z)>=2.)setstatelabel("dead");}
 		wait;
 	xxxdeath:
-	    #### # 0 {bUseSpecial=false;}
+    #### # 0 {bUseSpecial=false;}
 		#### O 5;
 		#### P 5{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
@@ -513,31 +526,28 @@ class PedestrianFod4f : HDFemCivilian   //office lady
 		PEF4 L 4;
 		#### LK 6;
 		#### JIH 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	ungib:
 		PGIB E 12;
 		#### D 8;
 		#### BCA 6;
 		PEF4 PONM 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	rescued:
-	    TNT1 A 0 A_SpawnItem("TeleportFog");
-	    TNT1 A 0 A_SpawnItem("ClipMagPickup");
-	    stop;
+    TNT1 A 0 A_SpawnItem("TeleportFog");
+    TNT1 A 0 A_SpawnItem("CivvieLootSpawner");
+    stop;
 	}
 
 }
 
-class PedestrianFod5f : HDFemCivilian   //black tanktop girl
+class Civvie5f : HDFemCivilian   //black tanktop girl
 {
   states{
 	spawn:
 		PEF5 R 1{
-			if(Civvie_SpawnFriendly)
-		    {bfriendly=true;
-		    bnotarget=false;}
 			A_HDLook();
 			//A_Recoil(frandom(-0.1,0.1));
 		}
@@ -561,7 +571,9 @@ class PedestrianFod5f : HDFemCivilian   //black tanktop girl
 		#### CD 5 A_SetAngle(angle+random(-4,4));
 		#### A 0{
 			A_Look();
-			//if(!random(0,127))A_Vocalize(activesound);
+			if(!random(0,127)
+			   &&Civvie_StayQuiet==false
+			  )A_Vocalize(activesound);
 		}
 		#### AB 5 A_SetAngle(angle+random(-4,4));
 		#### B 1 A_SetTics(random(10,40));
@@ -575,9 +587,7 @@ class PedestrianFod5f : HDFemCivilian   //black tanktop girl
 		#### ABCD random(4,5) A_HDChase();
 		loop;
 
-    melee:
-        ---- EDCBA 3 A_Recoil(2);
-    missile:
+  missile:
 		---- A 0 setstatelabel("see");
 	
 	pain:
@@ -601,7 +611,7 @@ class PedestrianFod5f : HDFemCivilian   //black tanktop girl
 		#### ABCD 2 A_HDChase();
 		---- A 0 setstatelabel("see");
 	death:
-	    #### # 0 {bUseSpecial=false;}
+	  #### # 0 {bUseSpecial=false;}
 		#### H 5;
 		#### I 5 A_Vocalize(deathsound);
 		#### J 5 A_NoBlocking();
@@ -611,7 +621,7 @@ class PedestrianFod5f : HDFemCivilian   //black tanktop girl
 		#### M 5 canraise{if(abs(vel.z)>=2.)setstatelabel("dead");}
 		wait;
 	xxxdeath:
-	    #### # 0 {bUseSpecial=false;}
+    #### # 0 {bUseSpecial=false;}
 		#### O 5;
 		#### P 5{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
@@ -637,32 +647,27 @@ class PedestrianFod5f : HDFemCivilian   //black tanktop girl
 		PEF5 L 4;
 		#### LK 6;
 		#### JIH 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	ungib:
 		PGIB E 12;
 		#### D 8;
 		#### BCA 6;
 		PEF5 PONM 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	rescued:
-	    TNT1 A 0 A_SpawnItem("TeleportFog");
-	    TNT1 A 0 A_SpawnItem("ShellRandom");
-	    stop;
+	  TNT1 A 0 A_SpawnItem("TeleportFog");
+	  TNT1 A 0 A_SpawnItem("CivvieLootSpawner");
+	  stop;
 	}
-
 }
 
-
-class PedestrianFod6f : HDFemCivilian   //bike shorts girl
+class Civvie6f : HDFemCivilian   //bike shorts girl
 {
   states{
 	spawn:
 		PEF6 R 1{
-			if(Civvie_SpawnFriendly)
-		    {bfriendly=true;
-		    bnotarget=false;}
 			A_HDLook();
 			//A_Recoil(frandom(-0.1,0.1));
 		}
@@ -686,7 +691,9 @@ class PedestrianFod6f : HDFemCivilian   //bike shorts girl
 		#### CD 5 A_SetAngle(angle+random(-4,4));
 		#### A 0{
 			A_Look();
-			//if(!random(0,127))A_Vocalize(activesound);
+			if(!random(0,127)
+			   &&Civvie_StayQuiet==false
+			  )A_Vocalize(activesound);
 		}
 		#### AB 5 A_SetAngle(angle+random(-4,4));
 		#### B 1 A_SetTics(random(10,40));
@@ -700,9 +707,7 @@ class PedestrianFod6f : HDFemCivilian   //bike shorts girl
 		#### ABCD random(4,5) A_HDChase();
 		loop;
 
-    melee:
-        ---- EDCBA 3 A_Recoil(2);
-    missile:
+  missile:
 		---- A 0 setstatelabel("see");
 	
 	pain:
@@ -736,7 +741,7 @@ class PedestrianFod6f : HDFemCivilian   //bike shorts girl
 		#### M 5 canraise{if(abs(vel.z)>=2.)setstatelabel("dead");}
 		wait;
 	xxxdeath:
-	    #### # 0 {bUseSpecial=false;}
+    #### # 0 {bUseSpecial=false;}
 		#### O 5;
 		#### P 5{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
@@ -745,7 +750,7 @@ class PedestrianFod6f : HDFemCivilian   //bike shorts girl
 		PGIB ABCDE 5;
 		goto xdead;
 	xdeath:
-	    #### # 0 {bUseSpecial=false;}
+    #### # 0 {bUseSpecial=false;}
 		#### O 5{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
 			A_XScream();
@@ -762,32 +767,27 @@ class PedestrianFod6f : HDFemCivilian   //bike shorts girl
 		PEF6 L 4;
 		#### LK 6;
 		#### JIH 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	ungib:
 		PGIB E 12;
 		#### D 8;
 		#### BCA 6;
 		PEF6 PONM 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	rescued:
-	    TNT1 A 0 A_SpawnItem("TeleportFog");
-	    TNT1 A 0 A_SpawnItem("ClipMagPickup");
-	    stop;
+    TNT1 A 0 A_SpawnItem("TeleportFog");
+    TNT1 A 0 A_SpawnItem("CivvieLootSpawner");
+    stop;
 	}
-
 }
 
-
-class PedestrianDoc2f : HDFemCivilian   //scientist girl
+class CivvieDoc2f : HDFemCivilian   //scientist girl
 {
   states{
 	spawn:
 		DOC2 R 1{
-			if(Civvie_SpawnFriendly)
-		    {bfriendly=true;
-		    bnotarget=false;}
 			A_HDLook();
 			//A_Recoil(frandom(-0.1,0.1));
 		}
@@ -811,7 +811,9 @@ class PedestrianDoc2f : HDFemCivilian   //scientist girl
 		#### CD 5 A_SetAngle(angle+random(-4,4));
 		#### A 0{
 			A_Look();
-			//if(!random(0,127))A_Vocalize(activesound);
+			if(!random(0,127)
+			   &&Civvie_StayQuiet==false
+			  )A_Vocalize(activesound);
 		}
 		#### AB 5 A_SetAngle(angle+random(-4,4));
 		#### B 1 A_SetTics(random(10,40));
@@ -825,8 +827,6 @@ class PedestrianDoc2f : HDFemCivilian   //scientist girl
 		#### ABCD random(4,5) A_HDChase();
 		loop;
 
-    melee:
-        ---- EDCBA 3 A_Recoil(2);
     missile:
 		---- A 0 setstatelabel("see");
 	
@@ -851,7 +851,7 @@ class PedestrianDoc2f : HDFemCivilian   //scientist girl
 		#### ABCD 2 A_HDChase();
 		---- A 0 setstatelabel("see");
 	death:
-	    #### # 0 {bUseSpecial=false;}
+    #### # 0 {bUseSpecial=false;}
 		#### H 5;
 		#### I 5 A_Vocalize(deathsound);
 		#### J 5 A_NoBlocking();
@@ -861,7 +861,7 @@ class PedestrianDoc2f : HDFemCivilian   //scientist girl
 		#### M 5 canraise{if(abs(vel.z)>=2.)setstatelabel("dead");}
 		wait;
 	xxxdeath:
-	    #### # 0 {bUseSpecial=false;}
+    #### # 0 {bUseSpecial=false;}
 		#### O 5;
 		#### P 5{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
@@ -870,7 +870,7 @@ class PedestrianDoc2f : HDFemCivilian   //scientist girl
 		PGIB ABCDE 5;
 		goto xdead;
 	xdeath:
-	    #### # 0 {bUseSpecial=false;}
+    #### # 0 {bUseSpecial=false;}
 		#### O 5{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
 			A_XScream();
@@ -887,19 +887,18 @@ class PedestrianDoc2f : HDFemCivilian   //scientist girl
 		DOC2 L 4;
 		#### LK 6;
 		#### JIH 4;
-	    #### # 0 {bUseSpecial=true;}
+    #### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	ungib:
 		PGIB E 12;
 		#### D 8;
 		#### BCA 6;
 		DOC2 PONM 4;
-		#### # 0 {bUseSpecial=true;}
+		#### # 0 {if(bFriendly)bUseSpecial=true;}
 		#### A 0 A_Jump(256,"see");
 	rescued:
-	    TNT1 A 0 A_SpawnItem("TeleportFog");
-	    TNT1 A 0 A_SpawnItem("PortableHealingItemBig");
-	    stop;
+    TNT1 A 0 A_SpawnItem("TeleportFog");
+    TNT1 A 0 A_SpawnItem("PortableHealingItemBig");
+    stop;
 	}
-
 }
