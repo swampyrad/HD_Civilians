@@ -1,4 +1,4 @@
-//civilian randomizer
+// civilian spawn randomizer
 class CivvieDropper:RandomSpawner{
 	default{
     dropitem "Civvie1",256,5;
@@ -18,15 +18,32 @@ class CivvieDropper:RandomSpawner{
 	}
 }
 
+// regular civilian loot drops
 class CivvieLootSpawner:RandomSpawner{
 	default{
-    dropitem "ShellRandom",256,5;
-    dropitem "ClipMagPickup",256,5;
+    dropitem "ClipMagPickup",256,20;
+    dropitem "ShellRandom",256,15;
+    dropitem "CellRandom",256,12;
+    dropitem "ShellBoxRandom",256,10;
+    dropitem "CellPackReplacer",256,3;
+    dropitem "RocketBoxRandom",256,2;
+    dropitem "ClipBoxPickup",256,1;
 	}
 }
 
-//base civilian actor, all civilians 
-//should inherit from this
+// scientist/doctor loot drops
+class DoctorLootSpawner:RandomSpawner{
+	default{
+    dropitem "PortableMedikit",256,20;
+    dropitem "PortableStimpack",256,10;
+    dropitem "HDHealingPotion",256,5;
+    dropitem "ShieldCore",256,2;
+    dropitem "PortableBerserkPack",256,1;
+	}
+}
+
+// base civilian actor, all civilians 
+// should inherit from this
 class HDCivilian : HDHumanoid
 {
   default{
@@ -37,8 +54,8 @@ class HDCivilian : HDHumanoid
   deathsound "civvie/death";
   activesound "civvie/active";
   
-  //don't use footstep sfx, the sound of dozens of civvies 
-  //running around gets real noisy real fast lmao
+  // don't use footstep sfx, the sound of dozens of civvies 
+  // running around gets real noisy real fast lmao
 	hdmobbase.landsound "";
 	hdmobbase.stepsound "";
 	hdmobbase.stepsoundwet "";
@@ -55,52 +72,30 @@ class HDCivilian : HDHumanoid
   Activation THINGSPEC_Activate | THINGSPEC_NoDeathSpecial;
   }
   
-//unused at the moment, planning on
-//simplifying civilian classes, since
-//they all pretty much act the same way
-/*
-  
-  string currentsprite;
-  
-  static const name CivvieSprites[] = 
-    {
-        'PEM1',
-        'PEM2',
-        'PEM3',
-        'PEM4',
-        'PEM5',
-        'PEM7',
-        'DOC1'
-    };
-*/
-
+  // tracks civilian actor's assigned sprite index,
+  // used for recalling appropriate sprites when
+  // spawning and ungibbing
   string civviesprite;
 
   override void postbeginplay(){
     super.postbeginplay();
-    
+  
+  // if set, civilians won't attack player,
+  // but will be attacked by monsters
     if(Civvie_SpawnFriendly){
       bfriendly=true;
       bnotarget=false;
     }
-
-//unused at the moment
-/*
-    //pick a random sprite index for civilians
-    sprite = GetSpriteIndex(CivvieSprites[random(0, CivvieSprites.Size()-1)]);
-    
-    //save chosen sprite index for later
-    currentsprite = sprite;
-*/
   }
-  
-  //all civilian behavior checks
-  //should be handled in here
+
+  // all civilian behavior checks
+  // should be handled in here
   override void Tick(){
     super.Tick();
     
-    //check if civilian is alive first
+    // check if civilian is alive first
     if(health>0){
+    
       //enable rescue if friendly
       if(bfriendly&&!bUseSpecial){
         bUseSpecial=true;
@@ -108,14 +103,14 @@ class HDCivilian : HDHumanoid
         bMISSILEEVENMORE=true;
       }
     
-      //evil civs are hostile and can't be rescued
-      //without being incapped first
+      // evil civs are hostile and can't be 
+      // rescued without being incapped first
       if(!bfriendly
          &&InStateSequence(
              curState, 
              ResolveState("falldown")
-           )//enable rescue if knocked down
-        )bUseSpecial=true;
+           )
+        )bUseSpecial=true; // enable rescue if knocked down
       else if(!bfriendly&&bUseSpecial){
         bUseSpecial=false;
         bNoTarget=true;
@@ -124,15 +119,20 @@ class HDCivilian : HDHumanoid
     }else bUseSpecial=false;//disable rescue if dead
   }
   
-  //civilians get teleported away and 
-  //leave items behind as a reward
   override void Activate(Actor activator){
     SetStateLabel("Rescued");
+    // civilians get teleported away and 
+    // leave items behind as a reward
+    
+    // display message after successfully 
+    // warping a civilian out of the map
+    if(bfriendly)A_Log("\c[Sapphire]Civilian rescued.");
+    else A_Log("\c[Sapphire]Hostile detained.");
   }
   
   states{
 	spawn:
-	//preloading civvie sprites
+	// preloading civvie sprites
 	  PEM1 A 0;
 	  PEM2 A 0;
 	  PEM3 A 0;
@@ -187,6 +187,13 @@ class HDCivilian : HDHumanoid
 		
   missile:
 		---- A 0 setstatelabel("see");
+	    
+	//civilians step back after attacking, so
+	//they don't just wail on you indefinitely
+	meleeend:
+		#### D 3 A_Recoil(frandom(2.,3.));
+		#### CBA 3;
+		#### A 0 setstatelabel("see");
 	    
 	pain:
 		#### H 2;
@@ -315,7 +322,7 @@ class CivvieDoc1 : HDCivilian   //Senior medical specialist
   states{
 	rescued:
     TNT1 A 0 A_SpawnItem("TeleportFog");
-    TNT1 A 0 A_SpawnItem("PortableHealingItemBig");
+    TNT1 A 0 A_SpawnItem("DoctorLootSpawner");
     stop;
 	}
 }

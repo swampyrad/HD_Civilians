@@ -74,7 +74,7 @@ class CivvieDoc2f : HDFemCivilian   //scientist girl
   states{
 	rescued:
     TNT1 A 0 A_SpawnItem("TeleportFog");
-    TNT1 A 0 A_SpawnItem("PortableHealingItemBig");
+    TNT1 A 0 A_SpawnItem("DoctorLootSpawner");
     stop;
 	}
 }
