@@ -225,25 +225,25 @@ class HDCivilian : HDHumanoid
 		#### M 5 canraise{if(abs(vel.z)>=2.)setstatelabel("dead");}
 		wait;
 	xxxdeath:
-		#### O 5;
-		#### P 5{
+		#### O 4;
+		#### P 4{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
 			A_XScream();
 		}
-		PGIB ABCDE 5;
-		goto xdead;
-	xdeath:
-		#### O 5{
+		PGIB ABCDEFG 3;
+		goto gibbed;
+	gib:
+		#### O 4{
 			spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
 			A_XScream();
 		}
 		#### O 0 A_NoBlocking();
-		#### P 5 spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
-		PGIB ABCDE 5;
-		goto xdead;
-	xdead:
-		PGIB D 3 canraise{if(abs(vel.z)<2.)frame++;}
-		PGIB E 5 canraise A_JumpIf(abs(vel.z)>=2.,"xdead");
+		#### P 4 spawn("MegaBloodSplatter",pos+(0,0,34),ALLOW_REPLACE);
+		PGIB ABCDEFG 4;
+		goto gibbed;
+	gibbed:
+		PGIB F 4 canraise{if(abs(vel.z)<2.)frame++;}
+		PGIB G 4 canraise A_JumpIf(abs(vel.z)>=2.,"gibbed");
 		wait;
 	raise:
 		#### L 4;
@@ -251,11 +251,9 @@ class HDCivilian : HDHumanoid
 		#### JIH 4;
 		#### A 0 A_Jump(256,"see");
 	ungib:
-		PGIB E 12;
-		#### D 8;
-		#### BCA 6;
+		PGIB GFEDCBA 4;
 		#### P 0 {sprite = GetSpriteIndex(civviesprite);}
-		#### PONM 4;
+		#### PO 4;
 		#### A 0 A_Jump(256,"see");
 	rescued:
     TNT1 A 0 A_SpawnItem("TeleportFog");
